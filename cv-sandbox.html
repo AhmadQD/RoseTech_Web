@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoseTech · Computer Vision Sandbox (YOLOv8 / PyTorch)</title>
+  <link rel="stylesheet" href="cv-style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a href="index.html" class="btn" style="background: transparent; border: 1px solid var(--border); color: var(--ink); text-decoration: none;">← Back to RoseTech</a>
+    <div class="title-group">
+      <h1>
+        <span><span class="rose">Rose</span>Tech Vision Sandbox</span>
+        <span class="badge-pill">YOLOv8 · MobileNet · PyTorch</span>
+      </h1>
+      <p>Interactive Leaf Disease Inference Engine, Confidence Threshold Calibrator & FastAPI/PostgreSQL Inspector</p>
+    </div>
+    <div class="top-controls">
+      <label class="btn" for="uploadInput">📷 Upload Custom Leaf Image</label>
+      <input type="file" id="uploadInput" accept="image/*" hidden>
+      <button class="btn primary" id="rescanBtn">⚡ Re-Run Inference</button>
+      <button class="btn" id="themeToggle">☀️ Light Mode</button>
+    </div>
+  </header>
+
+  <!-- 4-STAGE OPENCV & PYTORCH PIPELINE -->
+  <section class="cv-pipeline" aria-label="Computer Vision Pipeline">
+    <div class="pipe-step active" id="p1">
+      <div class="pipe-num">1</div>
+      <div><b>Image Acquisition</b><small>RGB Upload / Field Capture</small></div>
+    </div>
+    <div class="pipe-step active" id="p2">
+      <div class="pipe-num">2</div>
+      <div><b>OpenCV Preprocessing</b><small>Resize 640×640 · Normalize</small></div>
+    </div>
+    <div class="pipe-step active" id="p3">
+      <div class="pipe-num">3</div>
+      <div><b>PyTorch Forward Pass</b><small id="pipeArchText">YOLOv8s-det (Bounding Box)</small></div>
+    </div>
+    <div class="pipe-step active" id="p4">
+      <div class="pipe-num">4</div>
+      <div><b>Threshold Gate & DB</b><small id="pipeGateText">Conf ≥ 0.75 → Validated</small></div>
+    </div>
+  </section>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="sandbox-grid">
+    <!-- LEFT COLUMN -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <b style="font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted);">1. Select Test Leaf Sample</b>
+        <span style="font-size:11px; color:var(--muted);">Taif Rose Dataset</span>
+      </div>
+
+      <div class="sample-tabs">
+        <button class="s-tab active" data-case="healthy"><span>🌿 Healthy Rose Leaf</span><span class="conf-tag">0.982</span></button>
+        <button class="s-tab" data-case="mildew"><span>🍄 Powdery Mildew</span><span class="conf-tag">0.941</span></button>
+        <button class="s-tab" data-case="blackspot"><span>⚫ Black Spot Disease</span><span class="conf-tag">0.915</span></button>
+        <button class="s-tab" data-case="uncertain"><span>❓ Ambiguous / Early Stress</span><span class="conf-tag">0.540</span></button>
+      </div>
+
+      <div class="viewport" id="viewport">
+        <div class="laser" id="laser"></div>
+        <div class="viewport-hud">
+          <span class="hud-tag" id="hudModel">MODEL: YOLOv8s-det</span>
+          <span class="hud-tag" id="hudLatency">INFERENCE: 38 ms</span>
+        </div>
+        <img id="customImg" alt="Uploaded leaf" hidden>
+        <svg id="leafSvg" viewBox="0 0 240 240" width="240" height="240">
+          <defs>
+            <radialGradient id="leafGrad" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#34d399"/>
+              <stop offset="65%" stop-color="#15803d"/>
+              <stop offset="100%" stop-color="#14532d"/>
+            </radialGradient>
+          </defs>
+          <path d="M120 22 C155 35, 195 75, 185 135 C178 175, 145 202, 120 218 C95 202, 62 175, 55 135 C45 75, 85 35, 120 22 Z" fill="url(#leafGrad)" stroke="#052e16" stroke-width="3"/>
+          <path d="M120 24 L120 216 M120 65 Q148 52 166 58 M120 100 Q158 84 180 95 M120 138 Q154 122 176 132 M120 172 Q142 162 156 168 M120 75 Q92 62 74 68 M120 112 Q82 96 60 106 M120 150 Q86 136 66 144" stroke="#86efac" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.65"/>
+          <g id="lesionLayer"></g>
+        </svg>
+        <div id="bboxContainer"></div>
+      </div>
+
+      <div class="control-row">
+        <div>
+          <div class="slider-head" style="margin-bottom:6px;">
+            <span>2. Vision Architecture Mode</span>
+            <span id="archHint" style="color:var(--blue); font-size:11.5px;">Localization + Classification</span>
+          </div>
+          <div class="model-switch">
+            <button class="m-btn active" data-arch="yolov8">YOLOv8 Detection (Bounding Boxes)</button>
+            <button class="m-btn" data-arch="mobilenet">MobileNetV3 Classification (Image-Level)</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head">
+            <span>3. Validation Confidence Threshold</span>
+            <span id="threshVal" style="font-family:monospace; color:var(--accent);">0.75 (75%)</span>
+          </div>
+          <input type="range" id="threshSlider" min="0.30" max="0.96" step="0.01" value="0.75">
+          <small style="color:var(--muted); font-size:11.5px; display:block;">Predictions scoring below this threshold are automatically flagged as <b>Uncertain</b> and routed for specialist review.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+      <div class="card">
+        <div class="status-banner" id="statusBanner">
+          <div>
+            <small style="text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--muted);">Diagnostic Output</small>
+            <h2 id="predTitle">Healthy Taif Rose Leaf</h2>
+          </div>
+          <span class="status-pill" id="predBadge">CONFIRMED · 98.2%</span>
+        </div>
+
+        <div class="prob-list">
+          <div class="prob-item"><b>Healthy Leaf</b><div class="prob-track"><div class="prob-fill" id="barHealthy" style="width:98.2%; background:var(--green);"></div></div><span id="valHealthy" style="font-family:monospace; text-align:right;">98.2%</span></div>
+          <div class="prob-item"><b>Powdery Mildew</b><div class="prob-track"><div class="prob-fill" id="barMildew" style="width:1.1%; background:var(--red);"></div></div><span id="valMildew" style="font-family:monospace; text-align:right;">1.1%</span></div>
+          <div class="prob-item"><b>Black Spot</b><div class="prob-track"><div class="prob-fill" id="barSpot" style="width:0.7%; background:var(--amber);"></div></div><span id="valSpot" style="font-family:monospace; text-align:right;">0.7%</span></div>
+        </div>
+
+        <div class="guidance-grid">
+          <div class="guide-box"><h4>Agronomic Guidance (Mobile App Display)</h4><p id="guideEn">No visible foliar disease symptoms...</p></div>
+          <div class="guide-box"><h4>AIoT Sensor Correlation (ESP32 Node)</h4><p id="sensorContext"><b>Temp:</b> 24.2°C · <b>Humidity:</b> 56% · <b>Soil:</b> 44%<br><span style="color:var(--green);">✓ Microclimate unfavorable for fungal spore germination.</span></p></div>
+        </div>
+      </div>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="c-tab active" data-code="json">FastAPI Response (JSON)</button>
+          <button class="c-tab" data-code="sql">PostgreSQL INSERT</button>
+          <button class="c-tab" data-code="python">PyTorch / FastAPI Endpoint</button>
+        </div>
+        <pre id="codeDisplay"></pre>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="cv-script.js"></script>
+</body>
+</html>

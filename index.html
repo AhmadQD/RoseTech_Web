@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RoseTech: AIoT for Taif Rose</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1><span class="r">Rose</span>Tech</h1>
+    <p>How the system fits together, from the Taif rose to the dashboard. Tap any part to learn more.</p>
+  </div>
+  
+  <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+    <a href="cv-sandbox.html" class="btn" style="background: #38bdf8; border-color: #38bdf8; color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);">
+      🚀 Vision Sandbox (1B)
+    </a>
+    <span class="parallel-badge" style="margin-left: 0; font-size: 10px; padding: 2px 8px;">
+      ⚡ In Parallel with Step 1
+    </span>
+  </div>
+</header>
+
+<!-- =========================================
+     TECH STACK SHOWCASE (NEW)
+     ========================================= -->
+<section class="tech-stack-section">
+  <div class="tech-stack-title">Project Tech Stack</div>
+  
+  <div class="tech-stack-grid">
+    <!-- Hardware Carousel -->
+    <div class="stack-window hardware-window">
+      <div class="stack-header">
+        <h3>🔧 Hardware</h3>
+        <div class="stack-nav">
+          <button class="stack-btn" id="hw-prev">←</button>
+          <span id="hw-counter">1 / 6</span>
+          <button class="stack-btn" id="hw-next">→</button>
+        </div>
+      </div>
+      <div class="stack-content">
+        <img id="hw-image" src="images/esp32.jpeg" alt="Hardware Component" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2103/2103391.png'">
+        <div class="stack-info">
+          <h4 id="hw-name">ESP32 Node</h4>
+          <p id="hw-desc">Main microcontroller for sensor reading and wireless transmission.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Software Carousel -->
+    <div class="stack-window software-window">
+      <div class="stack-header">
+        <h3>💻 Software</h3>
+        <div class="stack-nav">
+          <button class="stack-btn" id="sw-prev">←</button>
+          <span id="sw-counter">1 / 5</span>
+          <button class="stack-btn" id="sw-next">→</button>
+        </div>
+      </div>
+      <div class="stack-content">
+        <div id="sw-icon" class="sw-icon" style="background: #10b981;">🐍</div>
+        <div class="stack-info">
+          <h4 id="sw-name">FastAPI</h4>
+          <p id="sw-desc">High-performance Python backend framework for REST APIs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="banner"><b>Virtual-first:</b> sensors and ESP-NOW are simulated until the full prototype works. Scroll down for the Backend A-Z Simulation.</div>
+<!-- Play Button (Moved here) -->
+<div class="flow-play-container">
+  <button class="btn" id="play">▶ Play the flow</button>
+</div>
+<main class="flow">
+  <!-- Stage 1: Sense -->
+  <section class="stage"><h2>1 · Sense</h2>
+    <button class="comp" data-id="plant">
+      <img class="i-plant" src="images/plant.png" alt="Potted plant" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1884/1884894.png'">
+      <b>Taif rose plant</b>
+    </button>
+    <button class="comp" data-id="dht22">
+      <img class="i-dht" src="images/dht22.jpeg" alt="DHT22 sensor" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2933/2933221.png'">
+      <b>DHT22</b><small>air temperature & humidity</small>
+    </button>
+    <button class="comp" data-id="soil">
+      <img class="i-soil" src="images/soil.jpeg" alt="Capacitive soil moisture sensor" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3125/3125732.png'">
+      <b>Soil moisture sensor</b><small>capacitive v1.2</small>
+    </button>
+  </section>
+
+  <div class="conn">
+    <div class="arrow" data-c="c1a"><span>digital, 1 data pin</span><i></i></div>
+    <div class="arrow" data-c="c1b"><span>analog, ADC input</span><i></i></div>
+  </div>
+
+  <!-- Stage 2: Read -->
+  <section class="stage"><h2>2 · Read</h2>
+    <button class="comp" data-id="node">
+      <img class="i-board" src="images/esp32.jpeg" alt="ESP32 node board" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2103/2103391.png'">
+      <b>ESP32 node</b><small>reads the sensors</small>
+    </button>
+  </section>
+
+  <div class="conn"><div class="arrow" data-c="c2"><span>ESP-NOW (wireless)</span><i></i></div></div>
+
+  <!-- Stage 3: Relay & Capture -->
+  <section class="stage"><h2>3 · Relay & Capture</h2>
+    <button class="comp" data-id="gateway">
+      <img class="i-board" src="images/gateway.jpeg" alt="ESP32 gateway board" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041916.png'">
+      <b>ESP32 gateway</b><small>forwards to the backend</small>
+    </button>
+    <button class="comp" data-id="cam">
+      <img class="i-board" src="images/cam.jpeg" alt="ESP32-CAM board" onerror="this.src='https://cdn-icons-png.flaticon.com/512/685/685655.png'">
+      <b>ESP32-CAM</b><small>takes plant photos · planned</small>
+    </button>
+  </section>
+
+  <div class="conn">
+    <div class="arrow" data-c="c3a"><span>Wi-Fi, HTTP POST (JSON)</span><i></i></div>
+    <div class="arrow" data-c="c3b"><span>Wi-Fi, HTTP POST (photo)</span><i></i></div>
+  </div>
+
+  <!-- Stage 4: Store & Show -->
+  <section class="stage"><h2>4 · Store & Show</h2>
+    <div class="s4">
+      <button class="comp card span" data-id="backend"><b>Backend</b><small>receives, validates, stores</small>
+        <span class="chips"><span class="chip">FastAPI</span><span class="chip">PostgreSQL</span><span class="chip plan">Disease detection · planned</span></span>
+      </button>
+      <div class="arrow v" data-c="c4a"><span>REST API (JSON)</span><i></i></div>
+      <div class="arrow v" data-c="c4b"><span>REST API (JSON)</span><i></i></div>
+      <button class="comp card" data-id="dashboard"><b>Dashboard</b><small>Arabic (RTL) web page</small>
+        <span class="tiles">
+          <span class="tile">Temp<svg viewBox="0 0 60 24"><polyline points="2,18 12,12 22,15 32,7 42,10 58,4" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+          <span class="tile">Humidity<svg viewBox="0 0 60 24"><polyline points="2,8 12,11 22,6 32,13 42,9 58,12" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+          <span class="tile">Soil<svg viewBox="0 0 60 24"><polyline points="2,6 12,9 22,13 32,16 42,19 58,15" fill="none" stroke="#b45309" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+        </span><span class="chips"><span class="chip">Illustrative</span></span>
+      </button>
+      <button class="comp card" data-id="app">
+        <img class="i-app" src="images/app.jpeg" alt="Mobile app screen" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2953/2953952.png'">
+        <b>Flutter app</b><small>mobile</small>
+        <span class="chips"><span class="chip plan">planned</span></span>
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- EXPLAIN SECTION -->
+
+  </div>
+  <div class="explain-grid">
+    <article class="explain-card">
+      <h3>1. Sensing</h3>
+      <p>The Taif rose is monitored with a DHT22 sensor for temperature and humidity, plus a capacitive soil moisture sensor. These readings tell the system whether the plant environment is healthy or starting to drift out of range.</p>
+    </article>
+    <article class="explain-card">
+      <h3>2. Edge computing</h3>
+      <p>An ESP32 node reads the sensor data, converts the soil signal into a percentage, and packages everything into a single JSON message. This keeps the data structured before it is transmitted wirelessly.</p>
+    </article>
+    <article class="explain-card">
+      <h3>3. Relay and storage</h3>
+      <p>The ESP32 gateway receives the message over ESP-NOW and forwards it to the backend over Wi-Fi. The backend validates the readings and stores them so they can be reviewed later or displayed in a dashboard.</p>
+    </article>
+  </div>
+</section>
+
+<section class="contract">
+  <div>
+    <h3>Data contract</h3>
+    <p>Every reading travels as one JSON message with these fields.</p>
+    <pre>{
+  node_id,
+  seq,
+  source,
+  temperature_c,
+  humidity_pct,
+  soil_moisture_pct
+}</pre>
+  </div>
+  <div>
+    <h3>What this project is</h3>
+    <p>A monitoring and early-detection system for Taif roses. It only reads and reports: sensors and a camera observe, the backend stores and analyzes, the dashboard and a mobile app show. This page explains the idea and shows no live data.</p>
+  </div>
+</section>
+
+<!-- BACKEND A-Z SIMULATION -->
+<section class="sim-section">
+  <h2>Backend A-Z Simulation</h2>
+  <p>Watch the data travel from the sensors, get validated by FastAPI, stored in PostgreSQL, and displayed on the dashboard.</p>
+  
+  <div class="sim-grid">
+    <div class="sim-panel">
+      <div class="sim-header">
+        <div class="section-header-flex">
+          <span class="step-badge">1A</span>
+          <h4><span class="dot"></span> Server Logs</h4>
+        </div>
+        <span style="font-size: 12px; color: var(--muted);">Live</span>
+      </div>
+      <div class="log-window" id="log-window">
+        <div class="log-line info">System initialized. Waiting for data...</div>
+      </div>
+    </div>
+    
+    <div class="sim-panel">
+      <div class="sim-header">
+        <div class="section-header-flex">
+          <span class="step-badge">2A</span>
+          <h4>PostgreSQL Database</h4>
+        </div>
+        <span style="font-size: 12px; color: var(--muted);">sensor_readings</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="db-table" id="db-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Temp</th>
+              <th>Humid</th>
+              <th>Soil</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sim-controls">
+    <button class="btn btn-sim" id="btn-sensor">Send Sensor Data</button>
+    <button class="btn btn-sim ghost" id="btn-camera">Capture & Analyze Photo</button>
+  </div>
+  
+  <div style="text-align: center; margin-top: 20px;">
+    <a href="cv-sandbox.html" style="color: var(--accent); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+      ➔ Want to see the AI Vision Sandbox? Click here (1B)
+    </a>
+  </div>
+</section>
+
+<!-- =========================================
+     LIVE DASHBOARD PREVIEW
+     ========================================= -->
+<section class="sim-section" id="live-dashboard" style="margin-top: 40px;">
+  <div class="section-top-flex">
+    <div class="section-title-group">
+      <div class="section-header-row">
+        <span class="step-badge">3</span>
+        <h2 class="section-header-title">Live Dashboard Preview</h2>
+      </div>
+      <p class="section-subtitle">A real-time view of the farm's telemetry and AI diagnostics.</p>
+      
+      <!-- Academic Note Card -->
+      <div class="academic-note-card">
+        <span class="note-icon">📌</span>
+        <div>
+          <span class="note-title">Academic Note</span>
+          <span class="note-text">
+            This live dashboard is a functional prototype of the data visualization layer. The final farmer interface will be delivered as a <b>Flutter mobile app</b> as specified in the project proposal.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <span class="chip system-status-chip">
+      <span class="dot system-status-dot"></span> System Online
+    </span>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="dashboard-kpi-grid">
+    <div class="glass-card kpi-card">
+      <small class="kpi-label">Air Temp</small>
+      <h3 id="dash-temp" class="kpi-value">-- °C</h3>
+      <span class="kpi-subtext">Optimal Range</span>
+    </div>
+    <div class="glass-card kpi-card">
+      <small class="kpi-label">Humidity</small>
+      <h3 id="dash-hum" class="kpi-value">-- %</h3>
+      <span class="kpi-subtext">Optimal Range</span>
+    </div>
+    <div class="glass-card kpi-card">
+      <small class="kpi-label">Soil Moisture</small>
+      <h3 id="dash-soil" class="kpi-value">-- %</h3>
+      <span class="kpi-subtext">Optimal Range</span>
+    </div>
+    <div class="glass-card kpi-card">
+      <small class="kpi-label">AI Status</small>
+      <h3 id="dash-ai" class="kpi-value small">No Scan</h3>
+      <span class="kpi-subtext muted">Last: --</span>
+    </div>
+  </div>
+
+  <!-- Charts & Alerts Row -->
+  <div class="dashboard-charts-row">
+    <div class="sim-panel dashboard-chart-panel">
+      <div class="sim-header" style="border-bottom: none; padding-bottom: 0;">
+        <h4>Temperature & Humidity Trend</h4>
+      </div>
+      <div style="height: 200px; position: relative;">
+        <svg viewBox="0 0 400 150" class="dashboard-chart-svg">
+          <defs>
+            <linearGradient id="tempGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="30" x2="400" y2="30" stroke="var(--bd)" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="0" y1="75" x2="400" y2="75" stroke="var(--bd)" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="0" y1="120" x2="400" y2="120" stroke="var(--bd)" stroke-width="1" stroke-dasharray="4"/>
+          <polygon id="temp-area" points="0,150" fill="url(#tempGrad)" />
+          <polyline id="temp-line" points="0,75" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+          <polyline id="hum-line" points="0,75" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="dashboard-chart-legend">
+        <span class="legend-temp">● Temperature</span>
+        <span class="legend-hum">● Humidity</span>
+      </div>
+    </div>
+
+    <div class="sim-panel dashboard-alerts-panel">
+      <div class="sim-header" style="border-bottom: none; padding-bottom: 0;">
+        <h4>System Alerts</h4>
+      </div>
+      <div id="dash-alerts" class="dashboard-alerts-list">
+        <div class="alert-item-initial">
+          <b>System Initialized</b><br>Waiting for sensor data...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Farmer History Log -->
+  <div class="sim-panel history-log-panel">
+    <div class="sim-header history-log-header">
+      <h4>📋 Farmer Action History (Live Log)</h4>
+      <span style="font-size: 11px; color: var(--muted);">Latest readings first</span>
+    </div>
+    <div id="dash-history" class="history-log-list">
+      <div class="history-log-empty">
+        No readings yet. Click "Send Sensor Data" above to start.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- =========================================
+     FARMER MOBILE APP MOCKUP (NEW)
+     ========================================= -->
+<section class="sim-section" id="phone-mockup" style="margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h2 style="margin: 0; font-size: 28px;">Farmer Mobile App</h2>
+    <p style="margin: 5px 0 0; color: var(--muted);">The final Flutter interface for the Taif rose farmer (planned).</p>
+    <span class="chip plan" style="margin-top: 10px; display: inline-block;">Planned · Flutter</span>
+  </div>
+
+  <!-- Phone Frame -->
+  <div class="phone-wrapper">
+    <div class="phone-frame">
+      <!-- Dynamic Island -->
+      <div class="phone-island"></div>
+      
+      <!-- Side Buttons -->
+      <div class="phone-btn-left-1"></div>
+      <div class="phone-btn-left-2"></div>
+      <div class="phone-btn-right"></div>
+
+      <!-- Screen -->
+      <div class="phone-screen">
+        <!-- Status Bar -->
+        <div class="phone-status-bar">
+          <span id="phone-time">9:41</span>
+          <div class="phone-icons">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+
+        <!-- App Header -->
+        <div class="phone-app-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 20px;">🌹</span>
+            <span style="font-weight: 700; font-size: 16px; color: #fff;">RoseTech</span>
+          </div>
+          <span style="font-size: 18px; color: #94a3b8;">⚙️</span>
+        </div>
+
+        <!-- Main Temp Card -->
+        <div class="phone-main-card">
+          <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Air Temperature</div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div id="phone-temp" style="font-size: 42px; font-weight: 800; color: #fff;">--°</div>
+            <div style="font-size: 40px;">☀️</div>
+          </div>
+          <div style="font-size: 12px; color: #10b981; margin-top: 5px;">Optimal Range</div>
+        </div>
+
+        <!-- Grid Cards -->
+        <div class="phone-grid">
+          <div class="phone-small-card">
+            <div style="font-size: 11px; color: #94a3b8;">Humidity</div>
+            <div id="phone-hum" style="font-size: 20px; font-weight: 700; color: #fff;">--%</div>
+            <div style="font-size: 16px;">💧</div>
+          </div>
+          <div class="phone-small-card">
+            <div style="font-size: 11px; color: #94a3b8;">Soil Moisture</div>
+            <div id="phone-soil" style="font-size: 20px; font-weight: 700; color: #fff;">--%</div>
+            <div style="font-size: 16px;">🌱</div>
+          </div>
+        </div>
+
+        <!-- Status Alert -->
+        <div id="phone-status" class="phone-alert" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981;">
+          ✅ Optimal Conditions
+        </div>
+
+
+
+        <!-- Phone Status Alert (الموجود مسبقاً) -->
+        <div id="phone-status" class="phone-alert" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981;">
+          ✅ Optimal Conditions
+        </div>
+
+        <!-- Phone Mini History Log (NEW) -->
+        <div class="phone-history-container">
+          <div class="phone-history-header">
+            <span>📋 Recent Actions</span>
+          </div>
+          <div id="phone-history-list" class="phone-history-list">
+            <!-- سيتم إضافة العناصر هنا تلقائياً -->
+            <div class="phone-history-empty">No recent actions yet.</div>
+          </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="phone-bottom-nav">
+
+
+
+
+        <!-- Bottom Nav -->
+        <div class="phone-bottom-nav">
+          <span style="color: #e11d74;">🏠</span>
+          <span>📊</span>
+          <span>📜</span>
+          <span>⚙️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- SIDEBAR PANEL -->
+<aside id="panel" hidden aria-live="polite">
+  <button id="close" aria-label="Close">×</button>
+  <div id="pstep"></div><h3 id="pt"></h3><p id="pd"></p>
+  <dl id="rs"><dt>Receives</dt><dd id="pr"></dd><dt>Sends</dt><dd id="ps"></dd></dl>
+  <span id="badge" hidden></span>
+  <div id="nav" hidden><button class="btn ghost" id="back">Back</button><button class="btn" id="next">Next</button><button class="btn ghost" id="stop">Stop</button></div>
+</aside>
+
+<script src="script.js"></script>
+</body>
+</html>
